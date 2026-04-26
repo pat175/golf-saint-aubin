@@ -6,8 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Saint-Aubin">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjM2IiBmaWxsPSIjMGE0ZDJlIi8+PHRleHQgeD0iOTAiIHk9IjExMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSI5MCIgZmlsbD0iI2Y3ZjNlOCI+4puzPC90ZXh0Pjwvc3ZnPg==">
 <meta name="theme-color" content="#063620">
 <title>Golf Saint-Aubin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
 :root{
   --green:#0a4d2e;--green-d:#063620;--fairway:#2d7a4b;
@@ -28,16 +30,19 @@ header::before{content:'';position:absolute;inset:6px;border:1px solid rgba(184,
 .club{font-family:Georgia,serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.85}
 h1{margin:2px 0 0;font-family:Georgia,serif;font-weight:400;font-size:26px;letter-spacing:1px}
 .sub{font-size:11px;opacity:.8;margin-top:4px;letter-spacing:1px}
+
 .tabs{display:flex;background:var(--cream);border-bottom:2px solid var(--green)}
 .tab{flex:1;padding:11px 0;text-align:center;font-size:13px;font-weight:600;
   color:#888;border:none;background:none;font-family:inherit;position:relative}
 .tab.active{color:var(--green)}
 .tab.active::after{content:'';position:absolute;bottom:-2px;left:20%;right:20%;
   height:3px;background:var(--green)}
+
 .date-row{display:flex;gap:8px;padding:10px 12px;background:var(--cream);
   border-bottom:1px solid var(--bd);font-size:12px;align-items:center}
 .date-row input,.date-row select{border:none;border-bottom:1px dotted var(--ink);
   background:none;font-family:inherit;font-size:12px;padding:2px 0;flex:1;min-width:0}
+
 .players{padding:8px 12px 10px;background:var(--cream);border-bottom:2px solid var(--green)}
 .player-row{display:grid;grid-template-columns:18px 1fr 50px 30px;gap:8px;
   align-items:center;margin-bottom:6px;font-size:13px}
@@ -46,12 +51,33 @@ h1{margin:2px 0 0;font-family:Georgia,serif;font-weight:400;font-size:26px;lette
   font-family:inherit;font-size:13px;padding:4px 0;width:100%}
 .player-row input.idx{text-align:center;font-variant-numeric:tabular-nums}
 .add-p{background:none;border:1px solid var(--green);color:var(--green);
-  border-radius:4px;font-size:11px;padding:4px 8​​​​​​​​​​​​​​​​
+  border-radius:4px;font-size:11px;padding:4px 8px;font-family:inherit}
+.rm-p{border:none;background:none;color:#999;font-size:18px;padding:0;width:24px}
+
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{background:var(--green);color:var(--cream);font-size:10px;font-weight:600;
+  padding:8px 2px;text-transform:uppercase;letter-spacing:.5px;
+  border-right:1px solid rgba(255,255,255,.15)}
+td{padding:0;text-align:center;border-bottom:1px solid var(--bd);
+  border-right:1px solid var(--bd);font-size:14px;height:44px;vertical-align:middle}
+td:last-child,th:last-child{border-right:none}
+.hole{font-weight:700;background:var(--cream);width:32px;font-size:15px}
+.par{width:28px;font-weight:600;color:var(--green)}
+.hcp{width:28px;font-size:11px;color:#888}
+.dist{width:42px;font-size:11px;color:#666;background:#fef8e8}
+.score-cell{position:relative;min-width:48px}
+.score-btn{width:100%;height:44px;border:none;background:none;font-size:18px;
+  font-weight:600;font-family:inherit;font-variant-numeric:tabular-nums;color:var(--ink);position:relative}
+.score-btn:active{background:rgba(10,77,46,.08)}
+.empty{color:#ccc;font-weight:400}
+.diff{position:absolute;top:2px;right:3px;font-size:9px;font-weight:700}
+.eagle{color:#1565c0}.birdie{color:var(--red)}.bogey{color:#666}.dbl{color:#222}
 tr.subtotal td{background:var(--cream);font-weight:700;height:36px;font-size:13px;
   border-top:2px solid var(--green);border-bottom:2px solid var(--green)}
 tr.subtotal .hole{font-size:10px;letter-spacing:.5px}
 tr.total td{background:var(--green);color:var(--cream);font-weight:700;height:42px;font-size:15px;border:none}
 tr.total .vs-par{font-size:10px;display:block;opacity:.85;font-weight:400}
+
 .gps{padding:16px 14px 20px;text-align:center}
 .gps-off{padding:30px 20px;color:#666}
 .gps-off button{margin-top:14px;padding:12px 24px;background:var(--green);
@@ -88,6 +114,7 @@ tr.total .vs-par{font-size:10px;display:block;opacity:.85;font-weight:400}
 .shot-list{margin-top:14px;text-align:left;font-size:12px;border-top:1px solid var(--bd);padding-top:10px}
 .shot-list .sh{display:flex;justify-content:space-between;padding:5px 4px;color:#555}
 .shot-list .sh b{font-variant-numeric:tabular-nums;color:var(--ink)}
+
 .editor{position:fixed;inset:auto 0 0 0;background:var(--paper);
   border-top:3px solid var(--green);padding:14px 16px 20px;
   box-shadow:0 -8px 30px rgba(0,0,0,.4);transform:translateY(110%);
@@ -124,16 +151,19 @@ tr.total .vs-par{font-size:10px;display:block;opacity:.85;font-weight:400}
 .live{animation:pulse 2s infinite;display:inline-block;width:7px;height:7px;
   background:var(--red);border-radius:50%;margin-right:5px;vertical-align:1px}
 </style>
+
 <div class="card">
   <header>
     <div class="club">Golf Bluegreen</div>
     <h1>Saint-Aubin</h1>
     <div class="sub">PARCOURS LE MESNIL · PAR 70 · 5502 M</div>
   </header>
+
   <div class="tabs">
     <button class="tab active" id="tab-sc" onclick="setTab('sc')">Carte de score</button>
     <button class="tab" id="tab-gps" onclick="setTab('gps')">📡 GPS</button>
   </div>
+
   <div id="pane-sc">
     <div class="date-row">
       <span>Date</span><input id="date" type="date">
@@ -150,6 +180,7 @@ tr.total .vs-par{font-size:10px;display:block;opacity:.85;font-weight:400}
     </div>
     <div class="foot">SSS 67.3 · Slope 123 (jaunes H) — Route du Golf, 91190 Saint-Aubin</div>
   </div>
+
   <div id="pane-gps" class="gps hidden">
     <div id="gps-off" class="gps-off">
       <div style="font-size:42px;margin-bottom:8px">📡</div>
@@ -166,6 +197,7 @@ tr.total .vs-par{font-size:10px;display:block;opacity:.85;font-weight:400}
         <button onclick="gpsHole(1)">›</button>
       </div>
       <div class="gps-info">Par <b id="g-par"></b> · Hcp <span id="g-hcp"></span> · <span id="g-dist"></span> m</div>
+
       <div id="g-have">
         <div class="gps-dist">
           <div><span class="big" id="g-center">–</span><span class="unit"> m</span></div>
@@ -180,18 +212,23 @@ tr.total .vs-par{font-size:10px;display:block;opacity:.85;font-weight:400}
         Green <b id="g-none-n"></b> non mémorisé.<br>
         Joue le trou et appuie sur «📍 Je suis sur le green» en arrivant.
       </div>
+
       <div id="g-drive" class="gps-drive hidden"></div>
+
       <div class="gps-actions">
         <button class="tee" onclick="markTee()">⛳ Je suis au départ</button>
         <button class="pin" onclick="markGreen()">📍 Je suis sur le green</button>
         <button class="shot" onclick="markShot()">＋ Mesurer ce coup</button>
       </div>
+
       <div id="g-shots" class="shot-list hidden"></div>
+
       <div class="gps-acc" id="g-acc"></div>
       <div class="calib-status" id="g-calib"></div>
     </div>
   </div>
 </div>
+
 <div class="overlay" id="ov" onclick="closeEd()"></div>
 <div class="editor" id="ed">
   <div class="ed-head">
@@ -232,6 +269,8 @@ let G={on:false,h:0,pos:null,acc:null,watch:null,lastTee:null,lastShot:null,shot
 
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+
+// storage: window.storage (Claude) si dispo, sinon localStorage (Safari standalone)
 const STO={
   async get(k){
     if(window.storage){try{const r=await window.storage.get(k);return r?r.value:null;}catch(e){return null;}}
@@ -402,4 +441,3 @@ $('date').onchange=e=>{S.date=e.target.value;save();};
 $('tee').onchange=e=>{S.tee=+e.target.value;save();renderTable();if(G.on)renderGPS();};
 load();
 </script>
-</html>
