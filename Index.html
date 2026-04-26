@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Saint-Aubin">
+<meta name="theme-color" content="#063620">
+<title>Golf Saint-Aubin</title>
+<style>
+:root{
+  --green:#0a4d2e;--green-d:#063620;--fairway:#2d7a4b;
+  --cream:#f7f3e8;--paper:#fdfbf4;--sand:#d4b896;
+  --red:#c41e3a;--ink:#1a1a1a;--gold:#b8924a;--bd:#d8d2c0;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--green-d);color:var(--ink);
+  background-image:radial-gradient(circle at 20% 10%,#0d5a36 0%,transparent 40%),
+                   radial-gradient(circle at 80% 90%,#0d5a36 0%,transparent 40%);
+  padding-bottom:80px}
+.card{background:var(--paper);margin:12px;border-radius:6px;overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,.4)}
+header{background:var(--green);color:var(--cream);padding:18px 16px 14px;
+  border-bottom:3px double var(--gold);text-align:center;position:relative}
+header::before{content:'';position:absolute;inset:6px;border:1px solid rgba(184,146,74,.4);pointer-events:none}
+.club{font-family:Georgia,serif;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.85}
+h1{margin:2px 0 0;font-family:Georgia,serif;font-weight:400;font-size:26px;letter-spacing:1px}
+.sub{font-size:11px;opacity:.8;margin-top:4px;letter-spacing:1px}
+.tabs{display:flex;background:var(--cream);border-bottom:2px solid var(--green)}
+.tab{flex:1;padding:11px 0;text-align:center;font-size:13px;font-weight:600;
+  color:#888;border:none;background:none;font-family:inherit;position:relative}
+.tab.active{color:var(--green)}
+.tab.active::after{content:'';position:absolute;bottom:-2px;left:20%;right:20%;
+  height:3px;background:var(--green)}
+.date-row{display:flex;gap:8px;padding:10px 12px;background:var(--cream);
+  border-bottom:1px solid var(--bd);font-size:12px;align-items:center}
+.date-row input,.date-row select{border:none;border-bottom:1px dotted var(--ink);
+  background:none;font-family:inherit;font-size:12px;padding:2px 0;flex:1;min-width:0}
+.players{padding:8px 12px 10px;background:var(--cream);border-bottom:2px solid var(--green)}
+.player-row{display:grid;grid-template-columns:18px 1fr 50px 30px;gap:8px;
+  align-items:center;margin-bottom:6px;font-size:13px}
+.pdot{width:14px;height:14px;border-radius:50%}
+.player-row input{border:none;border-bottom:1px solid var(--bd);background:none;
+  font-family:inherit;font-size:13px;padding:4px 0;width:100%}
+.player-row input.idx{text-align:center;font-variant-numeric:tabular-nums}
+.add-p{background:none;border:1px solid var(--green);color:var(--green);
+  border-radius:4px;font-size:11px;padding:4px 8​​​​​​​​​​​​​​​​
+tr.subtotal td{background:var(--cream);font-weight:700;height:36px;font-size:13px;
+  border-top:2px solid var(--green);border-bottom:2px solid var(--green)}
+tr.subtotal .hole{font-size:10px;letter-spacing:.5px}
+tr.total td{background:var(--green);color:var(--cream);font-weight:700;height:42px;font-size:15px;border:none}
+tr.total .vs-par{font-size:10px;display:block;opacity:.85;font-weight:400}
+.gps{padding:16px 14px 20px;text-align:center}
+.gps-off{padding:30px 20px;color:#666}
+.gps-off button{margin-top:14px;padding:12px 24px;background:var(--green);
+  color:var(--cream);border:none;border-radius:6px;font-size:15px;font-family:inherit;font-weight:600}
+.gps-hole-sel{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:8px}
+.gps-hole-sel button{width:42px;height:42px;border-radius:50%;border:1.5px solid var(--green);
+  background:var(--cream);font-size:20px;color:var(--green)}
+.gps-hole-lbl{font-family:Georgia,serif;font-size:14px;color:#666}
+.gps-hole-lbl b{font-size:32px;color:var(--green);display:block;line-height:1}
+.gps-info{font-size:12px;color:#888;margin-bottom:14px}
+.gps-dist{margin:6px 0 4px}
+.gps-dist .big{font-size:84px;font-weight:200;line-height:1;
+  font-variant-numeric:tabular-nums;letter-spacing:-3px;color:var(--ink)}
+.gps-dist .unit{font-size:18px;color:#888;font-weight:400}
+.gps-dist .lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#999;margin-top:2px}
+.gps-fb{display:flex;justify-content:center;gap:24px;margin:10px 0 18px;font-variant-numeric:tabular-nums}
+.gps-fb div{font-size:13px;color:#666}
+.gps-fb b{display:block;font-size:22px;color:var(--ink);font-weight:600}
+.gps-uncal{background:#fef8e8;border:1px dashed var(--sand);border-radius:8px;
+  padding:14px;margin:10px 0;font-size:13px;color:#7a6a3a}
+.gps-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.gps-actions button{padding:13px 8px;border-radius:6px;font-family:inherit;
+  font-size:13px;font-weight:600;border:1.5px solid var(--green)}
+.gps-actions .pin{background:var(--green);color:var(--cream)}
+.gps-actions .tee{background:var(--cream);color:var(--green)}
+.gps-actions .shot{grid-column:1/-1;background:#fff;border-color:var(--bd);color:var(--ink);font-weight:500}
+.gps-acc{font-size:10px;color:#aaa;margin-top:10px}
+.gps-drive{font-size:12px;color:var(--fairway);margin:6px 0;font-weight:600}
+.calib-status{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--bd)}
+.calib-status span{width:18px;height:18px;border-radius:3px;font-size:9px;
+  display:flex;align-items:center;justify-content:center;background:#eee;color:#aaa}
+.calib-status span.ok{background:var(--fairway);color:#fff}
+.shot-list{margin-top:14px;text-align:left;font-size:12px;border-top:1px solid var(--bd);padding-top:10px}
+.shot-list .sh{display:flex;justify-content:space-between;padding:5px 4px;color:#555}
+.shot-list .sh b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.editor{position:fixed;inset:auto 0 0 0;background:var(--paper);
+  border-top:3px solid var(--green);padding:14px 16px 20px;
+  box-shadow:0 -8px 30px rgba(0,0,0,.4);transform:translateY(110%);
+  transition:transform .22s cubic-bezier(.3,1.4,.5,1);z-index:50}
+.editor.open{transform:translateY(0)}
+.ed-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.ed-title{font-family:Georgia,serif;font-size:15px}
+.ed-title b{font-size:20px;color:var(--green)}
+.ed-close{background:none;border:none;font-size:24px;color:#999;padding:0 6px}
+.ed-pad{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px}
+.ed-pad button{width:54px;height:54px;border-radius:50%;border:2px solid var(--green);
+  background:var(--cream);font-size:26px;font-weight:300;color:var(--green)}
+.ed-pad button:active{background:var(--green);color:var(--cream)}
+.ed-val{font-size:42px;font-weight:700;min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+.ed-quick{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px}
+.ed-quick button{padding:10px 0;border:1px solid var(--bd);background:#fff;
+  border-radius:5px;font-size:12px;font-family:inherit;color:var(--ink)}
+.ed-quick button.par-btn{border-color:var(--green);background:var(--cream);font-weight:600}
+.ed-nav{display:flex;gap:8px}
+.ed-nav button{flex:1;padding:12px;border:none;border-radius:5px;
+  font-family:inherit;font-size:14px;font-weight:600}
+.ed-nav .prev{background:var(--cream);color:var(--green);border:1px solid var(--green)}
+.ed-nav .next{background:var(--green);color:var(--cream)}
+.toolbar{display:flex;gap:8px;padding:12px;justify-content:center}
+.toolbar button{font-family:inherit;font-size:12px;padding:8px 14px;
+  border:1px solid var(--bd);background:var(--cream);border-radius:4px;color:var(--ink)}
+.foot{text-align:center;font-size:10px;color:#888;padding:0 12px 14px;
+  font-family:Georgia,serif;font-style:italic}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);opacity:0;
+  pointer-events:none;transition:opacity .2s;z-index:40}
+.overlay.open{opacity:1;pointer-events:auto}
+.hidden{display:none!important}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.live{animation:pulse 2s infinite;display:inline-block;width:7px;height:7px;
+  background:var(--red);border-radius:50%;margin-right:5px;vertical-align:1px}
+</style>
+<div class="card">
+  <header>
+    <div class="club">Golf Bluegreen</div>
+    <h1>Saint-Aubin</h1>
+    <div class="sub">PARCOURS LE MESNIL · PAR 70 · 5502 M</div>
+  </header>
+  <div class="tabs">
+    <button class="tab active" id="tab-sc" onclick="setTab('sc')">Carte de score</button>
+    <button class="tab" id="tab-gps" onclick="setTab('gps')">📡 GPS</button>
+  </div>
+  <div id="pane-sc">
+    <div class="date-row">
+      <span>Date</span><input id="date" type="date">
+      <span>Départs</span>
+      <select id="tee">
+        <option value="0">Blanc</option><option value="2" selected>Jaune</option>
+        <option value="3">Bleu</option><option value="4">Rouge</option>
+      </select>
+    </div>
+    <div class="players" id="players"></div>
+    <table id="tbl"></table>
+    <div class="toolbar">
+      <button onclick="newRound()">Nouvelle partie</button>
+    </div>
+    <div class="foot">SSS 67.3 · Slope 123 (jaunes H) — Route du Golf, 91190 Saint-Aubin</div>
+  </div>
+  <div id="pane-gps" class="gps hidden">
+    <div id="gps-off" class="gps-off">
+      <div style="font-size:42px;margin-bottom:8px">📡</div>
+      <div>Distance live au green via la position de ton téléphone.</div>
+      <button onclick="startGPS()">Activer le GPS</button>
+      <div style="font-size:11px;margin-top:14px;color:#999">
+        Première partie : appuie sur «📍 Green» en arrivant sur chaque green pour le mémoriser.
+      </div>
+    </div>
+    <div id="gps-on" class="hidden">
+      <div class="gps-hole-sel">
+        <button onclick="gpsHole(-1)">‹</button>
+        <div class="gps-hole-lbl">TROU<b id="g-hole">1</b></div>
+        <button onclick="gpsHole(1)">›</button>
+      </div>
+      <div class="gps-info">Par <b id="g-par"></b> · Hcp <span id="g-hcp"></span> · <span id="g-dist"></span> m</div>
+      <div id="g-have">
+        <div class="gps-dist">
+          <div><span class="big" id="g-center">–</span><span class="unit"> m</span></div>
+          <div class="lbl"><span class="live"></span>centre du green</div>
+        </div>
+        <div class="gps-fb">
+          <div>entrée<b id="g-front">–</b></div>
+          <div>fond<b id="g-back">–</b></div>
+        </div>
+      </div>
+      <div id="g-none" class="gps-uncal hidden">
+        Green <b id="g-none-n"></b> non mémorisé.<br>
+        Joue le trou et appuie sur «📍 Je suis sur le green» en arrivant.
+      </div>
+      <div id="g-drive" class="gps-drive hidden"></div>
+      <div class="gps-actions">
+        <button class="tee" onclick="markTee()">⛳ Je suis au départ</button>
+        <button class="pin" onclick="markGreen()">📍 Je suis sur le green</button>
+        <button class="shot" onclick="markShot()">＋ Mesurer ce coup</button>
+      </div>
+      <div id="g-shots" class="shot-list hidden"></div>
+      <div class="gps-acc" id="g-acc"></div>
+      <div class="calib-status" id="g-calib"></div>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="ov" onclick="closeEd()"></div>
+<div class="editor" id="ed">
+  <div class="ed-head">
+    <div class="ed-title">Trou <b id="ed-hole">1</b> · Par <span id="ed-par">4</span> · <span id="ed-pname"></span></div>
+    <button class="ed-close" onclick="closeEd()">×</button>
+  </div>
+  <div class="ed-pad">
+    <button onclick="bump(-1)">−</button>
+    <div class="ed-val" id="ed-val">–</div>
+    <button onclick="bump(1)">+</button>
+  </div>
+  <div class="ed-quick" id="ed-quick"></div>
+  <div class="ed-nav">
+    <button class="prev" onclick="navEd(-1)">‹ Préc.</button>
+    <button class="next" onclick="navEd(1)">Trou suiv. ›</button>
+  </div>
+</div>
+
+<script>
+const COURSE=[
+ {n:1,par:5,hcp:5, d:[482,482,467,467,452]},{n:2,par:4,hcp:17,d:[265,265,265,228,228]},
+ {n:3,par:4,hcp:1, d:[422,422,299,399,374]},{n:4,par:4,hcp:9, d:[358,358,334,334,311]},
+ {n:5,par:3,hcp:7, d:[154,154,131,131,105]},{n:6,par:4,hcp:15,d:[283,283,265,265,230]},
+ {n:7,par:4,hcp:11,d:[315,315,300,300,280]},{n:8,par:4,hcp:3, d:[373,373,360,360,340]},
+ {n:9,par:4,hcp:13,d:[308,308,308,275,275]},{n:10,par:3,hcp:4,d:[156,156,143,143,119]},
+ {n:11,par:4,hcp:16,d:[322,322,308,308,295]},{n:12,par:4,hcp:10,d:[335,335,316,316,297]},
+ {n:13,par:4,hcp:8, d:[320,320,280,280,249]},{n:14,par:5,hcp:12,d:[438,438,424,424,411]},
+ {n:15,par:3,hcp:6, d:[170,170,152,152,139]},{n:16,par:4,hcp:18,d:[317,317,309,280,270]},
+ {n:17,par:3,hcp:2, d:[154,154,140,140,119]},{n:18,par:4,hcp:14,d:[330,330,309,309,291]}
+];
+const PCOL=['#0a4d2e','#c41e3a','#1565c0','#b8924a'];
+const GREEN_R=12;
+
+let S={date:'',tee:2,players:[{name:'',idx:'',sc:Array(18).fill(null)}]};
+let CAL={greens:Array(18).fill(null),tees:Array(18).fill(null)};
+let cur={p:0,h:0};
+let G={on:false,h:0,pos:null,acc:null,watch:null,lastTee:null,lastShot:null,shots:[]};
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s||'').replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c]));
+const STO={
+  async get(k){
+    if(window.storage){try{const r=await window.storage.get(k);return r?r.value:null;}catch(e){return null;}}
+    try{return localStorage.getItem(k);}catch(e){return null;}
+  },
+  async set(k,v){
+    if(window.storage){try{await window.storage.set(k,v);}catch(e){}return;}
+    try{localStorage.setItem(k,v);}catch(e){}
+  }
+};
+
+async function load(){
+  const r=await STO.get('staubin:round');if(r)try{S=JSON.parse(r);}catch(e){}
+  const c=await STO.get('staubin:calib');if(c)try{CAL={...CAL,...JSON.parse(c)};}catch(e){}
+  if(!S.date)S.date=new Date().toISOString().slice(0,10);
+  $('date').value=S.date;$('tee').value=S.tee;
+  renderPlayers();renderTable();renderCalib();
+}
+async function save(){await STO.set('staubin:round',JSON.stringify(S));}
+async function saveCal(){await STO.set('staubin:calib',JSON.stringify(CAL));}
+
+function setTab(t){
+  $('tab-sc').classList.toggle('active',t=='sc');
+  $('tab-gps').classList.toggle('active',t=='gps');
+  $('pane-sc').classList.toggle('hidden',t!='sc');
+  $('pane-gps').classList.toggle('hidden',t!='gps');
+  if(t=='gps'&&G.on)renderGPS();
+}
+
+function renderPlayers(){
+  let h=S.players.map((p,i)=>`<div class="player-row">
+    <span class="pdot" style="background:${PCOL[i]}"></span>
+    <input placeholder="Joueur ${i+1}" value="${esc(p.name)}"
+      oninput="S.players[${i}].name=this.value;save();renderTable()">
+    <input class="idx" placeholder="Idx" value="${esc(p.idx)}" inputmode="decimal"
+      oninput="S.players[${i}].idx=this.value;save();renderTable()">
+    ${S.players.length>1?`<button class="rm-p" onclick="rmP(${i})">×</button>`:'<span></span>'}
+    </div>`).join('');
+  if(S.players.length<4)h+=`<button class="add-p" onclick="addP()">+ Ajouter joueur</button>`;
+  $('players').innerHTML=h;
+}
+function addP(){S.players.push({name:'',idx:'',sc:Array(18).fill(null)});renderPlayers();renderTable();save();}
+function rmP(i){S.players.splice(i,1);renderPlayers();renderTable();save();}
+function strokes(idx,hcp){const x=parseFloat(idx);if(isNaN(x))return 0;
+  const ch=Math.round(x*123/113+(67.3-70));
+  return ch<=0?0:Math.floor(ch/18)+(hcp<=ch%18?1:0);}
+function renderTable(){
+  const np=S.players.length,tee=+$('tee').value;
+  let h=`<tr><th>Trou</th><th>Par</th><th>Hcp</th><th>m</th>`;
+  S.players.forEach((p,i)=>h+=`<th style="background:${PCOL[i]}">${esc(p.name)||'J'+(i+1)}</th>`);h+='</tr>';
+  const sums=[Array(np).fill(0),Array(np).fill(0)],played=[Array(np).fill(0),Array(np).fill(0)];
+  let parS=[0,0],dS=[0,0];
+  COURSE.forEach((t,hi)=>{const half=hi<9?0:1;parS[half]+=t.par;dS[half]+=t.d[tee];
+    h+=`<tr><td class="hole">${t.n}</td><td class="par">${t.par}</td>
+      <td class="hcp">${t.hcp}</td><td class="dist">${t.d[tee]}</td>`;
+    S.players.forEach((p,pi)=>{const v=p.sc[hi],cr=strokes(p.idx,t.hcp);
+      let cls='',df='';
+      if(v!=null){sums[half][pi]+=v;played[half][pi]++;
+        const d=v-t.par;
+        if(d<=-2)cls='eagle';else if(d==-1)cls='birdie';else if(d==1)cls='bogey';else if(d>=2)cls='dbl';
+        if(d!=0)df=`<span class="diff ${cls}">${d>0?'+':''}${d}</span>`;}
+      h+=`<td class="score-cell"><button class="score-btn ${v==null?'empty':''}"
+        onclick="openEd(${pi},${hi})">${v??'·'}${df}
+        ${cr?`<span style="position:absolute;bottom:1px;left:3px;font-size:8px;color:#aaa">${'•'.repeat(Math.min(cr,3))}</span>`:''}
+        </button></td>`;});
+    h+='</tr>';
+    if(hi==8||hi==17){h+=`<tr class="subtotal"><td class="hole">${hi==8?'ALLER':'RETOUR'}</td>
+      <td>${parS[half]}</td><td></td><td class="dist">${dS[half]}</td>`;
+      S.players.forEach((p,pi)=>h+=`<td>${played[half][pi]?sums[half][pi]:'–'}</td>`);h+='</tr>';}
+  });
+  h+=`<tr class="total"><td colspan="2">TOTAL</td><td></td><td>${dS[0]+dS[1]}</td>`;
+  S.players.forEach((p,pi)=>{const tot=sums[0][pi]+sums[1][pi],pl=played[0][pi]+played[1][pi];
+    const pp=COURSE.filter((_,i)=>p.sc[i]!=null).reduce((a,t)=>a+t.par,0);
+    h+=`<td>${pl?tot:'–'}${pl?`<span class="vs-par">${tot-pp>=0?'+':''}${tot-pp}</span>`:''}</td>`;});
+  h+='</tr>';$('tbl').innerHTML=h;
+}
+function openEd(p,h){cur={p,h};updateEd();$('ed').classList.add('open');$('ov').classList.add('open');}
+function closeEd(){$('ed').classList.remove('open');$('ov').classList.remove('open');renderTable();}
+function updateEd(){const t=COURSE[cur.h],v=S.players[cur.p].sc[cur.h];
+  $('ed-hole').textContent=t.n;$('ed-par').textContent=t.par;
+  $('ed-pname').textContent=S.players[cur.p].name||'Joueur '+(cur.p+1);
+  $('ed-val').textContent=v??'–';$('ed-val').style.color=v==null?'#ccc':'var(--ink)';
+  const lbl=['Eagle','Birdie','Par','Bogey','Dbl'];
+  $('ed-quick').innerHTML=[-2,-1,0,1,2].map((d,i)=>
+    `<button class="${d==0?'par-btn':''}" onclick="setV(${t.par+d})">${t.par+d}<br>
+     <span style="font-size:9px;opacity:.6">${lbl[i]}</span></button>`).join('');}
+function bump(d){let v=S.players[cur.p].sc[cur.h];
+  if(v==null)v=COURSE[cur.h].par;else v=Math.max(1,Math.min(15,v+d));
+  S.players[cur.p].sc[cur.h]=v;save();updateEd();}
+function setV(v){S.players[cur.p].sc[cur.h]=v;save();updateEd();setTimeout(()=>navEd(1),120);}
+function navEd(d){
+  if(S.players.length>1&&d>0&&cur.p<S.players.length-1){cur.p++;}
+  else if(S.players.length>1&&d<0&&cur.p>0){cur.p--;}
+  else{cur.h=Math.max(0,Math.min(17,cur.h+d));cur.p=d>0?0:S.players.length-1;}
+  updateEd();}
+function newRound(){if(!confirm('Effacer tous les scores ?'))return;
+  S.players.forEach(p=>p.sc=Array(18).fill(null));
+  S.date=new Date().toISOString().slice(0,10);$('date').value=S.date;
+  G.shots=[];G.lastTee=null;G.lastShot=null;save();renderTable();}
+
+function haversine(a,b){const R=6371000,toRad=x=>x*Math.PI/180;
+  const dLat=toRad(b.lat-a.lat),dLon=toRad(b.lon-a.lon);
+  const s=Math.sin(dLat/2)**2+Math.cos(toRad(a.lat))*Math.cos(toRad(b.lat))*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s));}
+
+function startGPS(){
+  if(!navigator.geolocation){alert('GPS non disponible.');return;}
+  $('gps-off').classList.add('hidden');$('gps-on').classList.remove('hidden');
+  G.on=true;
+  const fp=S.players[0].sc.findIndex(v=>v==null);G.h=fp>=0?fp:0;
+  G.watch=navigator.geolocation.watchPosition(p=>{
+    G.pos={lat:p.coords.latitude,lon:p.coords.longitude};G.acc=p.coords.accuracy;renderGPS();
+  },e=>{$('g-acc').textContent='⚠️ '+(e.code==1?'Autorisation refusée':'Signal indisponible');},
+  {enableHighAccuracy:true,maximumAge:2000,timeout:15000});
+  renderGPS();
+}
+function gpsHole(d){G.h=Math.max(0,Math.min(17,G.h+d));G.shots=[];G.lastTee=CAL.tees[G.h];G.lastShot=null;renderGPS();}
+
+function renderGPS(){
+  const t=COURSE[G.h],tee=+$('tee').value;
+  $('g-hole').textContent=t.n;$('g-par').textContent=t.par;
+  $('g-hcp').textContent=t.hcp;$('g-dist').textContent=t.d[tee];
+  const grn=CAL.greens[G.h];
+  if(grn&&G.pos){
+    $('g-have').classList.remove('hidden');$('g-none').classList.add('hidden');
+    const d=haversine(G.pos,grn);
+    $('g-center').textContent=Math.round(d);
+    $('g-front').textContent=Math.max(0,Math.round(d-GREEN_R));
+    $('g-back').textContent=Math.round(d+GREEN_R);
+  }else{
+    $('g-have').classList.toggle('hidden',!grn);
+    $('g-none').classList.toggle('hidden',!!grn);
+    $('g-none-n').textContent=t.n;
+    if(grn){$('g-center').textContent='…';$('g-front').textContent='…';$('g-back').textContent='…';}
+  }
+  if(G.lastTee&&G.pos){
+    $('g-drive').textContent='Depuis le départ : '+Math.round(haversine(G.lastTee,G.pos))+' m';
+    $('g-drive').classList.remove('hidden');
+  }else $('g-drive').classList.add('hidden');
+  if(G.shots.length){
+    let sh='<div style="font-size:10px;letter-spacing:1px;color:#999;text-transform:uppercase;margin-bottom:4px">Coups mesurés</div>';
+    G.shots.forEach((s,i)=>{sh+=`<div class="sh"><span>Coup ${i+1}</span><b>${s} m</b></div>`;});
+    $('g-shots').innerHTML=sh;$('g-shots').classList.remove('hidden');
+  }else $('g-shots').classList.add('hidden');
+  $('g-acc').textContent=G.acc?'Précision GPS ±'+Math.round(G.acc)+' m':'Recherche du signal…';
+  renderCalib();
+}
+function renderCalib(){
+  $('g-calib').innerHTML=COURSE.map((t,i)=>
+    `<span class="${CAL.greens[i]?'ok':''}" onclick="G.h=${i};G.shots=[];G.lastShot=null;renderGPS()">${t.n}</span>`).join('');
+}
+function checkPos(){if(!G.pos){alert('Position GPS pas encore acquise.');return false;}
+  if(G.acc>25&&!confirm('Précision ±'+Math.round(G.acc)+' m. Continuer ?'))return false;
+  return true;}
+function markGreen(){if(!checkPos())return;
+  CAL.greens[G.h]={...G.pos};saveCal();
+  if(G.lastShot)G.shots.push(Math.round(haversine(G.lastShot,G.pos)));
+  G.lastShot=null;renderGPS();
+  setTimeout(()=>{openEd(0,G.h);},200);}
+function markTee(){if(!checkPos())return;
+  CAL.tees[G.h]={...G.pos};G.lastTee={...G.pos};G.lastShot={...G.pos};G.shots=[];
+  saveCal();renderGPS();}
+function markShot(){if(!checkPos())return;
+  if(G.lastShot)G.shots.push(Math.round(haversine(G.lastShot,G.pos)));
+  G.lastShot={...G.pos};renderGPS();}
+
+$('date').onchange=e=>{S.date=e.target.value;save();};
+$('tee').onchange=e=>{S.tee=+e.target.value;save();renderTable();if(G.on)renderGPS();};
+load();
+</script>
+</html>
